@@ -25,7 +25,11 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <SignedOut>
-            <SignIn routing="hash" />
+            <div className="h-screen flex items-center justify-center bg-gray-900">
+              <div className="p-8 bg-gray-800 rounded-lg shadow-lg text-white">
+                <SignIn routing="hash" />
+              </div>
+            </div>
           </SignedOut>
           <SignedIn>{children}</SignedIn>
         </body>
