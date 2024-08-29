@@ -3,3 +3,8 @@
 @tailwind utilities;
 
 
+/* styles/globals.css */
+body {
+    @apply bg-white dark:bg-gray-900 text-black dark:text-white;
+  }
+  
