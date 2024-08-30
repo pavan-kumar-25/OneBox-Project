@@ -3,14 +3,56 @@ import { useState, useEffect } from "react";
 import Leftsidebar from "@/components/Leftsidebar";
 import Login from "@/components/Login";
 import Navbar from "@/components/Navbar";
-import Image from "next/image"; // Import Next.js Image component
+import Image from "next/image";
+import { fetchData } from "@/components/fetchData";
 
 export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Manage login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+      fetchUserData(token);
+    } else {
+      // Check URL for token
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlToken = urlParams.get('token');
+      if (urlToken) {
+        localStorage.setItem('token', urlToken);
+        setIsLoggedIn(true);
+        fetchUserData(urlToken);
+        // Remove token from URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+        setLoading(false);
+      }
+    }
+  }, []);
+
+  const handleLogin = (token: string) => {
+    localStorage.setItem('token', token);
+    setIsLoggedIn(true);
+    fetchUserData(token);
+  };
+
+  const fetchUserData = (token: string) => {
+    fetchData(token)
+      .then((data) => {
+        setUserData(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setUserData(null);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -31,28 +73,43 @@ export default function Home() {
             <div className="flex-1 p-4 flex flex-col items-center justify-center border border-gray-300 bg-gray-800 text-white">
               {/* Centered Content */}
               <div className="text-center">
-                {/* Image with Text Below */}
-                <div className="relative mb-6">
-                  <Image
-                    src="/empty.png" // Update with the path to your image
-                    alt="Descriptive Alt Text"
-                    width={500} // Use natural width if known
-                    height={300} // Use natural height if known
-                    className="rounded-lg"
-                  />
-                </div>
-                <h2 className="text-2xl font-semibold mb-4">
-                  It’s the beginning of a legendary sales pipeline
-                </h2>
-                <p className="mb-6">
-                  When you have inbound E-mails you’ll see them here
-                </p>
+                {loading ? (
+                  <p>Loading...</p>
+                ) : userData && userData.data && userData.data.length > 0 ? (
+                  userData.data.map((mail: any) => (
+                    <div key={mail.id} className="bg-gray-700 p-4 mb-4 rounded-lg">
+                      <h3 className="text-xl font-semibold">{mail.subject}</h3>
+                      <p className="text-gray-400">From: {mail.fromName} ({mail.fromEmail})</p>
+                      <p className="text-gray-400">To: {mail.toName} ({mail.toEmail})</p>
+                      <p className="text-gray-400">Date: {new Date(mail.sentAt).toLocaleDateString()}</p>
+                      <div dangerouslySetInnerHTML={{ __html: mail.body }} />
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center">
+                    <div className="relative mb-6">
+                      <Image
+                        src="/empty.png"
+                        alt="Empty inbox"
+                        width={500}
+                        height={300}
+                        className="rounded-lg"
+                      />
+                    </div>
+                    <h2 className="text-2xl font-semibold mb-4">
+                      It's the beginning of a legendary sales pipeline
+                    </h2>
+                    <p className="mb-6">
+                      When you have inbound E-mails you'll see them here
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </>
       ) : (
-        <Login onLogin={() => setIsLoggedIn(true)} /> // Pass a callback to handle login
+        <Login onLogin={handleLogin} />
       )}
     </div>
   );

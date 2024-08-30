@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface LoginProps {
-  onLogin: () => void;
+  onLogin: (token: string) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
+  useEffect(() => {
+    // Check for token in URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    if (token) {
+      // If token is present, call onLogin
+      onLogin(token);
+      // Remove token from URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [onLogin]);
+
   const handleGoogleSignIn = () => {
     // Redirect to the Google login URL
-    window.location.href = 'https://hiring.reachinbox.xyz/api/v1/auth/google-login?redirect_to=https://localhost:3000/Home';
+    window.location.href = 'https://hiring.reachinbox.xyz/api/v1/auth/google-login?redirect_to=https://localhost:3000';
   };
 
   return (
@@ -25,14 +37,14 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
         <button
           className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mb-4"
-          onClick={handleGoogleSignIn} // Handle Google sign-in
+          onClick={handleGoogleSignIn}
         >
           Sign in with Google
         </button>
 
         <button
           className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded mb-6"
-          onClick={onLogin} // Simulate login for account creation
+          onClick={() => onLogin('mock-token')} // Simulate login for account creation
         >
           Create new account
         </button>
