@@ -1,6 +1,3 @@
-Here's a rewritten version of your README file with additional relevant details:
-
----
 
 # OneBox Project
 
