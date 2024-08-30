@@ -22,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
         </button>
         <div className="relative">
           <button className="bg-gray-700 dark:bg-gray-600 text-white px-3 py-2 rounded focus:outline-none">
-            Tim's workshop <span className="ml-2">&#9662;</span>
+            Tim&apos;s workshop <span className="ml-2">&#9662;</span>
           </button>
         </div>
       </div>

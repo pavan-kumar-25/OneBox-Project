@@ -85,10 +85,10 @@ export default function Home() {
                       />
                     </div>
                     <h2 className="text-2xl font-semibold mb-4">
-                      It's the beginning of a legendary sales pipeline
+                      It&apos;s the beginning of a legendary sales pipeline
                     </h2>
                     <p className="mb-6">
-                      When you have inbound E-mails you'll see them here
+                      When you have inbound E-mails you&apos;ll see them here
                     </p>
                   </div>
                 )}
