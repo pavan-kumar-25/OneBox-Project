@@ -14,7 +14,7 @@ To get started with the project locally, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-repo/onebox.git
+   git clone https://github.com/pavan-kumar-25/OneBox-Project.git
    cd onebox
    ```
 
