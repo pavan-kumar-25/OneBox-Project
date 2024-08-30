@@ -17,24 +17,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-      fetchUserData(token);
-    } else {
-      // Check URL for token
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlToken = urlParams.get('token');
-      if (urlToken) {
-        localStorage.setItem('token', urlToken);
-        setIsLoggedIn(true);
-        fetchUserData(urlToken);
-        // Remove token from URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-      } else {
-        setLoading(false);
-      }
-    }
+    // Clear the token from localStorage on initial load
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setLoading(false);
   }, []);
 
   const handleLogin = (token: string) => {
@@ -65,7 +51,9 @@ export default function Home() {
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
-      {isLoggedIn ? (
+      {!isLoggedIn ? (
+        <Login onLogin={handleLogin} />
+      ) : (
         <>
           <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
           <div className="flex">
@@ -108,8 +96,6 @@ export default function Home() {
             </div>
           </div>
         </>
-      ) : (
-        <Login onLogin={handleLogin} />
       )}
     </div>
   );

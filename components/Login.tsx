@@ -44,7 +44,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
         <button
           className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded mb-6"
-          onClick={() => onLogin('mock-token')} // Simulate login for account creation
+          onClick={() => onLogin('/')} // Simulate login for account creation
         >
           Create new account
         </button>
